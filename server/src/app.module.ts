@@ -14,6 +14,8 @@ import { StockModule } from '@modules/stock/stock.module';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { OrderModule } from '@modules/order/order.module';
 import { PurchaseModule } from '@modules/purchase/purchase.module';
+import { InvoiceModule } from '@modules/invoice/invoice.module';
+import { WarehouseModule } from '@modules/warehouse/warehouse.module';
 import { AppDataSource } from './database';
 
 @Module({
@@ -35,6 +37,8 @@ import { AppDataSource } from './database';
     InventoryModule,
     OrderModule,
     PurchaseModule,
+    InvoiceModule,
+    WarehouseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

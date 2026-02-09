@@ -30,7 +30,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @Roles('manager')
+  @Roles('admin', 'manager')
   @ApiOperation({ summary: 'Create a user' })
   @ApiResponse({ status: 201, description: 'User created' })
   create(@Body() createUserDto: CreateUserDto) {
