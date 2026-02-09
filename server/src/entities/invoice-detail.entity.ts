@@ -5,39 +5,46 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Invoice } from './invoice.entity';
 import { Item } from './item.entity';
 
 @Entity('invoice_detail')
 export class InvoiceDetail {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @Column({ name: 'invoice_id', type: 'int' })
-  invoiceId?: number;
+  invoiceId!: number;
 
   @Column({ name: 'item_code', type: 'varchar' })
-  itemCode?: string;
+  itemCode!: string;
 
   @Column({ name: 'unit_price', type: 'float' })
-  unitPrice?: number;
+  unitPrice!: number;
 
   @Column({ type: 'int' })
-  quantity?: number;
+  quantity!: number;
 
   @Column({ type: 'float', default: 0 })
-  tax?: number;
+  tax!: number;
 
   @Column({ type: 'float' })
-  amount?: number;
+  amount!: number;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt!: Date;
 
   @ManyToOne(() => Invoice, (inv) => inv.invoiceDetails, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'invoice_id' })
-  invoice?: Invoice;
+  invoice!: Invoice;
 
   @ManyToOne(() => Item, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'item_code', referencedColumnName: 'itemCode' })
-  item?: Item;
+  item!: Item;
 }

@@ -2,16 +2,16 @@ import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateItemDto {
   @IsString()
-  code?: string;
+  code!: string;
 
   @IsString()
-  name?: string;
+  name!: string;
 
   @IsOptional()
   @IsNumber()
-  categoryId?: number;
+  categoryId!: number;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 }

@@ -1,27 +1,28 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsIn } from 'class-validator';
+import { TRANSACTION_TYPES, TransactionType } from '../../../common/constants/transaction_types';
 
 export class CreateInventoryDto {
   @IsOptional()
   @IsString()
-  serialCode?: string;
+  serialCode!: string;
 
   @IsOptional()
   @IsNumber()
-  cost?: number;
+  cost!: number;
 
   @IsOptional()
   @IsNumber()
-  quantity?: number;
+  quantity!: number;
 
   @IsOptional()
   @IsString()
-  unit?: string;
+  unit!: string;
+
+  @IsOptional()
+  @IsIn(Object.values(TRANSACTION_TYPES))
+  transactionType!: TransactionType;
 
   @IsOptional()
   @IsString()
-  transactionType?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
+  description!: string;
 }

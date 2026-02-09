@@ -6,6 +6,7 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
+import { USER_ROLES, UserRole } from '../../../common/constants/user_roles';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Admin User' })
@@ -19,7 +20,7 @@ export class CreateUserDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  mobile?: string | null;
+  mobile!: string | null;
 
   @ApiProperty({ example: 'admin' })
   @IsString()
@@ -30,13 +31,12 @@ export class CreateUserDto {
   @MinLength(1)
   password: string;
 
-  @ApiProperty({ enum: ['admin', 'manager'], example: 'manager' })
-  @IsString()
-  @IsIn(['admin', 'manager'])
-  role: string;
+  @ApiProperty({ enum: USER_ROLES, example: 'manager' })
+  @IsIn(Object.values(USER_ROLES))
+  role: UserRole;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()
   @IsBoolean()
-  active?: boolean;
+  active!: boolean;
 }

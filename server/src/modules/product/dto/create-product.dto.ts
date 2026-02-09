@@ -2,17 +2,17 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProductDto {
   @ApiProperty({ example: 'Product name' })
-  name: string;
+  name!: string;
 
   @ApiProperty({ example: 'PRD001' })
-  code: string;
+  code!: string;
 
   @ApiPropertyOptional()
-  description?: string | null;
+  description!: string | null;
 
   @ApiPropertyOptional()
-  type?: string | null;
+  type!: string | null;
 
   @ApiPropertyOptional({ default: true })
-  active?: boolean;
+  active!: boolean;
 }

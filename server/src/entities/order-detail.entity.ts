@@ -13,45 +13,45 @@ import { OrderFulfillment } from './order-fulfillment.entity';
 @Entity('order_detail')
 export class OrderDetail {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @Column({ name: 'order_id', type: 'int' })
-  orderId?: number;
+  orderId!: number;
 
-  @Column({ name: 'item_code', type: 'varchar' })
-  itemCode?: string;
+  @Column({ name: 'item_code',  })
+  itemCode!: string;
 
   @Column({ type: 'float' })
-  price?: number;
+  price!: number;
 
   @Column({ type: 'int' })
-  quantity?: number;
+  quantity!: number;
 
   @Column({ name: 'original_amount', type: 'float' })
-  originalAmount?: number;
+  originalAmount!: number;
 
   @Column({ type: 'float', default: 0 })
-  discount?: number;
+  discount!: number;
 
   @Column({ type: 'float', default: 0 })
-  tax?: number;
+  tax!: number;
 
   @Column({ name: 'additional_fee', type: 'float', default: 0 })
-  additionalFee?: number;
+  additionalFee!: number;
 
-  @Column({ type: 'varchar', nullable: true })
-  description?: string | null;
+  @Column({ type: 'text', nullable: true })
+  description!: string | null;
 
   @ManyToOne(() => Order, (order) => order.orderDetails, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'order_id' })
-  order?: Order;
+  order!: Order;
 
   @ManyToOne(() => Item, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'item_code', referencedColumnName: 'itemCode' })
-  item?: Item;
+  item!: Item;
 
   @OneToMany(() => OrderFulfillment, (f) => f.orderDetail)
-  orderFulfillments?: OrderFulfillment[];
+  orderFulfillments!: OrderFulfillment[];
 }

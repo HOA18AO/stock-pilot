@@ -1,16 +1,23 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('category')
 export class Category {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
-  @Column({ type: 'varchar', unique: true })
-  code?: string;
+  @Column({ unique: true, name: 'code' })
+  code!: string;
 
-  @Column({ type: 'varchar' })
-  name?: string;
+  @Column({ name: 'name' })
+  name!: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  description?: string | null;
+  @Column({ nullable: true, name: 'note', type: 'text' })
+  description!: string | null;
+
+  @CreateDateColumn({ name : 'created_at' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name : 'updated_at' })
+  updatedAt!: Date;
 }

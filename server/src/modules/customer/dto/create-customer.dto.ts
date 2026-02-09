@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { CUSTOMER_TYPES, CustomerType } from '../../../common/constants/customer_types';
 
 export class CreateCustomerDto {
   @ApiProperty({ example: 'CUS001' })
@@ -8,11 +9,11 @@ export class CreateCustomerDto {
   name: string;
 
   @ApiPropertyOptional()
-  email?: string | null;
+  email!: string | null;
 
   @ApiPropertyOptional()
-  mobile?: string | null;
+  mobile!: string | null;
 
-  @ApiPropertyOptional({ example: 'b2b' })
-  type?: string | null;
+  @ApiPropertyOptional({ enum: CUSTOMER_TYPES, example: 'b2b' })
+  type!: CustomerType | null;
 }

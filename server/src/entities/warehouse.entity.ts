@@ -1,22 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('product')
-export class Product {
+@Entity('warehouse')
+export class Warehouse {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'varchar' })
-  name!: string;
-
   @Column({ type: 'varchar', unique: true })
   code!: string;
+
+  @Column({ type: 'varchar' })
+  name!: string;
 
   @Column({ type: 'text', nullable: true, name: 'note' })
   description!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  type!: string | null;
+  location!: string | null;
 
   @Column({ type: 'boolean', default: true })
   active!: boolean;

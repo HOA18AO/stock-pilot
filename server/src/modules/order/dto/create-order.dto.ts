@@ -1,33 +1,34 @@
-import { IsNumber, IsOptional, IsString, IsDate } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsDate, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ORDER_STATUSES, OrderStatus } from '../../../common/constants/order_statuses';
 
 export class CreateOrderDto {
   @IsOptional()
   @IsNumber()
-  customerId?: number;
+  customerId!: number;
 
   @IsOptional()
   @IsNumber()
-  staffId?: number;
+  staffId!: number;
 
   @IsOptional()
   @IsString()
-  orderCode?: string;
+  orderCode!: string;
 
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  orderDate?: Date;
+  orderDate!: Date;
 
   @IsOptional()
   @IsNumber()
-  totalAmount?: number;
+  totalAmount!: number;
+
+  @IsOptional()
+  @IsIn(Object.values(ORDER_STATUSES))
+  status!: OrderStatus;
 
   @IsOptional()
   @IsString()
-  status?: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
+  notes!: string;
 }

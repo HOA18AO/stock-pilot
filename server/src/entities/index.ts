@@ -17,3 +17,7 @@ export { Purchase } from './purchase.entity';
 export { PurchaseDetail } from './purchase-detail.entity';
 export { PurchaseReceipt } from './purchase-receipt.entity';
 export { Inventory } from './inventory.entity';
+export { Warehouse } from './warehouse.entity';
+export { Internal } from './internal.entity';
+export { InternalDetail } from './internal-detail.entity';
+export { InternalFulfillment } from './internal-fulfillment.entity';

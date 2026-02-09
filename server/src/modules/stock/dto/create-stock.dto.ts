@@ -3,17 +3,17 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 export class CreateStockDto {
   @IsOptional()
   @IsNumber()
-  productId?: number;
+  productId!: number;
 
   @IsOptional()
   @IsNumber()
-  itemId?: number;
+  itemId!: number;
 
   @IsOptional()
   @IsNumber()
-  quantity?: number;
+  quantity!: number;
 
   @IsOptional()
   @IsString()
-  unit?: string;
+  unit!: string;
 }

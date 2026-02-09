@@ -9,5 +9,5 @@ export class CreateVendorDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 }

@@ -9,5 +9,5 @@ export class CreateStaffDto {
 
   @IsOptional()
   @IsBoolean()
-  active?: boolean;
+  active!: boolean;
 }

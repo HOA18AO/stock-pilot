@@ -81,11 +81,8 @@ export class UserService {
     return this.omitPassword(entity);
   }
 
-  private omitPassword(user: User) {
-    const rest = { ...user };
-    if ('password' in rest) {
-      delete (rest as Record<string, unknown>).password;
-    }
+  private omitPassword(user: User): Omit<User, 'password'> {
+    const { password, ...rest } = user;
     return rest;
   }
 }
