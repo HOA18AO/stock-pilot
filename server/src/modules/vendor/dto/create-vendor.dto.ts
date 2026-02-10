@@ -1,8 +1,9 @@
 import { IsString, IsOptional } from 'class-validator';
 
 export class CreateVendorDto {
+  @IsOptional()
   @IsString()
-  code: string;
+  code?: string;
 
   @IsString()
   name: string;
