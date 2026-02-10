@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [prices, setPrices] = useState<number[]>([]);
 
   useEffect(() => {
     // Check if user is authenticated
@@ -13,6 +14,9 @@ export default function DashboardPage() {
     if (!token) {
       router.push('/login');
     }
+    
+    // Generate random prices on client side only
+    setPrices(Array.from({ length: 5 }, () => Math.random() * 500 + 100));
   }, [router]);
 
   return (
@@ -41,7 +45,7 @@ export default function DashboardPage() {
                     <p className="text-white font-medium">Order #{1000 + i}</p>
                     <p className="text-gray-400 text-sm">Customer {i}</p>
                   </div>
-                  <span className="text-green-400 font-semibold">${(Math.random() * 500 + 100).toFixed(2)}</span>
+                  <span className="text-green-400 font-semibold">${prices[i - 1]?.toFixed(2) || '0.00'}</span>
                 </div>
               ))}
             </div>
