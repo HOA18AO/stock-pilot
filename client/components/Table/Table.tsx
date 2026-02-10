@@ -14,6 +14,7 @@ interface TableProps<T> {
     columns: TableColumn<T>[];
     searchableColumns?: string[];
     defaultRowsPerPage?: number;
+    onRowClick?: (row: T) => void;
 }
 
 export default function Table<T extends Record<string, any>>({
@@ -21,6 +22,7 @@ export default function Table<T extends Record<string, any>>({
     columns,
     searchableColumns = [],
     defaultRowsPerPage = 10,
+    onRowClick,
 }: TableProps<T>) {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
@@ -255,7 +257,11 @@ export default function Table<T extends Record<string, any>>({
                             </tr>
                         ) : (
                             paginatedData.map((row, rowIndex) => (
-                                <tr key={rowIndex} className="hover:bg-gray-800 transition-colors">
+                                <tr 
+                                    key={rowIndex} 
+                                    className={`hover:bg-gray-800 transition-colors ${onRowClick ? 'cursor-pointer' : ''}`}
+                                    onClick={() => onRowClick?.(row)}
+                                >
                                     {visibleColumnDefs.map((col) => (
                                         <td key={col.key} className="px-6 py-4 text-sm text-gray-300">
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}

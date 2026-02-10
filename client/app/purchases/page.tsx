@@ -81,6 +81,10 @@ export default function PurchasesPage() {
         setShowCreateModal(false);
     };
 
+    const handleRowClick = (purchase: Purchase) => {
+        router.push(`/purchases/${purchase.id}`);
+    };
+
     const columns: TableColumn<Purchase>[] = [
         {
             key: 'id',
@@ -212,6 +216,7 @@ export default function PurchasesPage() {
                         columns={columns}
                         searchableColumns={['code', 'vendor.name', 'type', 'status']}
                         defaultRowsPerPage={10}
+                        onRowClick={handleRowClick}
                     />
                 </div>
             </div>

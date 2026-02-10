@@ -18,6 +18,7 @@ import {
 import { PurchaseService } from './purchase.service';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
+import { ReceiveProductsDto } from './dto/receive-purchase-products.dto';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@modules/auth/guards/roles.guard';
 import { Roles } from '@modules/auth/decorators/roles.decorator';
@@ -77,5 +78,19 @@ export class PurchaseController {
   @ApiResponse({ status: 404, description: 'Purchase not found' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.purchaseService.remove(id);
+  }
+
+  @Post(':id/receive')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('staff', 'manager')
+  @ApiOperation({ summary: 'Receive products for a purchase (staff/manager)' })
+  @ApiResponse({ status: 200, description: 'Products received successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid serial codes or quantity mismatch' })
+  @ApiResponse({ status: 404, description: 'Purchase not found' })
+  receiveProducts(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() receiveProductsDto: ReceiveProductsDto,
+  ) {
+    return this.purchaseService.receiveProducts(id, receiveProductsDto);
   }
 }
