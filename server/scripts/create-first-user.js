@@ -1,23 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-
-const rootDir = path.resolve(__dirname, '..', '..');
-const envPath = path.join(rootDir, '.env');
-if (fs.existsSync(envPath)) {
-  const content = fs.readFileSync(envPath, 'utf8');
-  content.split('\n').forEach((line) => {
-    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
-    if (m) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '').trim();
-  });
-}
+require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
 
 const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 
-const username = process.argv[2] || 'admin';
-const password = process.argv[3] || 'admin123';
-const role = (process.argv[4] || 'manager').toLowerCase();
-const name = process.argv[5] || username;
+const username = 'admin';
+const password = 'admin';
+const role = 'manager';
+const name = 'The Chosen One';
 
 if (!['admin', 'manager'].includes(role)) {
   console.error('role must be admin or manager');
@@ -29,7 +18,7 @@ const code = username;
 async function main() {
   const client = new Client({
     host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
+    port: process.env.DB_PORT || 5432,
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_NAME || 'webstore',
