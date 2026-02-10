@@ -1,0 +1,174 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Table, { TableColumn } from '@/components/Table/Table';
+import Button from '@/components/Button';
+
+interface Order {
+  id: number;
+  code: string;
+  customerCode: string;
+  staffCode: string;
+  status: string;
+  originalAmount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+function getApiUrl() {
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3008';
+}
+
+export default function OrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    fetchOrders(token);
+  }, [router]);
+
+  const fetchOrders = async (token: string) => {
+    try {
+      const res = await fetch(`${getApiUrl()}/order`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+
+      const data = await res.json();
+      setOrders(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const columns: TableColumn<Order>[] = [
+    {
+      key: 'id',
+      label: 'ID',
+      sortable: true,
+      render: (value) => <span className="font-mono text-gray-400">#{value}</span>,
+    },
+    {
+      key: 'code',
+      label: 'Order Code',
+      sortable: true,
+      render: (value) => <span className="font-mono font-semibold text-blue-400">{value}</span>,
+    },
+    {
+      key: 'customerCode',
+      label: 'Customer',
+      sortable: true,
+    },
+    {
+      key: 'staffCode',
+      label: 'Staff',
+      sortable: true,
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      sortable: true,
+      render: (value) => {
+        const statusColors: Record<string, string> = {
+          pending: 'bg-yellow-900 text-yellow-300',
+          confirmed: 'bg-blue-900 text-blue-300',
+          processing: 'bg-purple-900 text-purple-300',
+          shipped: 'bg-indigo-900 text-indigo-300',
+          delivered: 'bg-green-900 text-green-300',
+          cancelled: 'bg-red-900 text-red-300',
+        };
+        const color = statusColors[value?.toLowerCase()] || 'bg-gray-700 text-gray-300';
+        return (
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${color}`}>
+            {value || '-'}
+          </span>
+        );
+      },
+    },
+    {
+      key: 'originalAmount',
+      label: 'Amount',
+      sortable: true,
+      render: (value) => <span className="font-semibold text-green-400">${value?.toFixed(2) || '0.00'}</span>,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created',
+      sortable: true,
+      render: (value) => (
+        <span className="text-gray-400 text-xs">
+          {new Date(value).toLocaleDateString()}
+        </span>
+      ),
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 p-8 flex items-center justify-center">
+        <div className="text-white text-lg">Loading orders...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Orders</h1>
+            <p className="text-gray-400">
+              Manage your orders ({orders.length} total)
+            </p>
+          </div>
+          <Button variant="primary">
+            <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Create Order
+          </Button>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        {/* Table */}
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <Table
+            data={orders}
+            columns={columns}
+            searchableColumns={['code', 'customerCode', 'staffCode', 'status']}
+            defaultRowsPerPage={10}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
