@@ -42,6 +42,13 @@ if (!dbEnvLoaded) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  // Enable CORS
+  app.enableCors({
+    origin: true, // Allow all origins in development
+    credentials: true,
+  });
+  
   const config = new DocumentBuilder()
     .setTitle('Webstore API')
     .setDescription('API for webstore')
