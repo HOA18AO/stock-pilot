@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Product } from '@entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { generateCode } from '@common/utils';
 
 @Injectable()
 export class ProductService {
@@ -12,7 +13,12 @@ export class ProductService {
     private readonly repo: Repository<Product>,
   ) {}
 
-  create(dto: CreateProductDto) {
+  async create(dto: CreateProductDto) {
+    // Auto-generate code if not provided
+    if (!dto.code) {
+      dto.code = generateCode('PROD', 4);
+    }
+    
     const entity = this.repo.create(dto);
     return this.repo.save(entity);
   }
