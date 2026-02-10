@@ -47,14 +47,18 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
 
     useEffect(() => {
         if (isOpen) {
-            fetchVendorsAndProducts();
+            setError(''); // Clear any errors first
             resetForm();
+            fetchVendorsAndProducts();
         }
     }, [isOpen]);
 
     const fetchVendorsAndProducts = async () => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+            setError('Authentication token not found');
+            return;
+        }
 
         try {
             const [vendorsRes, productsRes] = await Promise.all([
@@ -66,17 +70,23 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
                 }),
             ]);
 
-            if (vendorsRes.ok) {
-                const vendorsData = await vendorsRes.json();
-                setVendors(vendorsData);
+            if (!vendorsRes.ok) {
+                throw new Error(`Failed to fetch vendors: ${vendorsRes.status} ${vendorsRes.statusText}`);
             }
 
-            if (productsRes.ok) {
-                const productsData = await productsRes.json();
-                setProducts(productsData);
+            if (!productsRes.ok) {
+                throw new Error(`Failed to fetch products: ${productsRes.status} ${productsRes.statusText}`);
             }
+
+            const vendorsData = await vendorsRes.json();
+            const productsData = await productsRes.json();
+
+            setVendors(vendorsData);
+            setProducts(productsData);
         } catch (err) {
-            console.error('Failed to fetch vendors/products:', err);
+            const errorMsg = err instanceof Error ? err.message : 'Failed to fetch vendors and products';
+            console.error(errorMsg, err);
+            setError(errorMsg);
         }
     };
 
