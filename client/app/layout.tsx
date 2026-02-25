@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Webstore",
-  description: "Webstore Management System",
+  title: "StockPilot ERP",
+  description: "StockPilot ERP Management System",
 };
 
 export default function RootLayout({

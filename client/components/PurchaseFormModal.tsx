@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Button from './Button';
 import NumberInput from './NumberInput';
 import SelectInput from './SelectInput';
+import OverlayBackdrop from './OverlayBackdrop';
 
 interface Vendor {
     code: string;
@@ -240,7 +241,7 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
     const totals = calculateTotals();
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <OverlayBackdrop className="z-50 flex items-center justify-center p-4">
             <div className="bg-gray-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-700">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-700">
@@ -504,6 +505,6 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
                     </div>
                 </form>
             </div>
-        </div>
+        </OverlayBackdrop>
     );
 }

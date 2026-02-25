@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from './Button';
+import OverlayBackdrop from './OverlayBackdrop';
 
 interface ReceiveProductsModalProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ export default function ReceiveProductsModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <OverlayBackdrop className="flex items-center justify-center z-50">
       <div className="bg-gray-800 rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
         <h2 className="text-xl font-bold text-white mb-4">Receive Products</h2>
 
@@ -217,6 +218,6 @@ export default function ReceiveProductsModal({
           </Button>
         </div>
       </div>
-    </div>
+    </OverlayBackdrop>
   );
 }
