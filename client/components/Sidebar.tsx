@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import OverlayBackdrop from './OverlayBackdrop';
 
 interface NavItem {
     name: string;
@@ -119,8 +120,8 @@ export default function Sidebar() {
 
             {/* Backdrop */}
             {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+                <OverlayBackdrop
+                    className="z-40 transition-opacity duration-300"
                     onClick={() => setIsOpen(false)}
                 />
             )}

@@ -35,7 +35,7 @@ export default function Navbar() {
                     {/* Logo/Brand */}
                     <div className="flex items-center">
                         <h1 className="text-2xl font-bold text-white">
-                            <span className="text-blue-500">Web</span>Store
+                            <span className="text-blue-500">StockPilot</span> ERP
                         </h1>
                     </div>
 
