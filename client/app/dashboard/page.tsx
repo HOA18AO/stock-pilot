@@ -53,10 +53,18 @@ export default function DashboardPage() {
 
           <ContentCard title="Quick Actions">
             <div className="space-y-3">
-              <Button variant="primary" fullWidth>Add New Product</Button>
-              <Button variant="secondary" fullWidth>Create Order</Button>
-              <Button variant="outline" fullWidth>View Inventory</Button>
-              <Button variant="ghost" fullWidth>Generate Report</Button>
+              <Button variant="primary" fullWidth onClick={() => router.push('/products')}>
+                Manage Products
+              </Button>
+              <Button variant="secondary" fullWidth onClick={() => router.push('/orders')}>
+                Manage Orders
+              </Button>
+              <Button variant="outline" fullWidth onClick={() => router.push('/items')}>
+                View Inventory
+              </Button>
+              <Button variant="ghost" fullWidth onClick={() => router.push('/warehouse')}>
+                View Warehouses
+              </Button>
             </div>
           </ContentCard>
         </div>
