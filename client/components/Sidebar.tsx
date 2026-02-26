@@ -80,6 +80,15 @@ export default function Sidebar() {
             ),
         },
         {
+            name: 'Warehouse',
+            href: '/warehouse',
+            icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7l9-4 9 4m-18 0l9 4m-9-4v10l9 4m0-10l9-4m-9 4v10" />
+                </svg>
+            ),
+        },
+        {
             name: 'Purchases',
             href: '/purchases',
             icon: (
