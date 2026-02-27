@@ -38,7 +38,7 @@ export class Purchase {
   @Column({ name: 'final_amount', type: 'float', default: 0 })
   finalAmount!: number;
 
-  @Column({ type: 'enum', enum: PURCHASE_STATUS, default: PURCHASE_STATUS.PENDING }) // pending, processing, completed
+  @Column({ type: 'enum', enum: PURCHASE_STATUS, default: PURCHASE_STATUS.PENDING }) // draft, pending, processing, completed
   status!: PURCHASE_STATUS_LIST;
 
   @Column({ type: 'text', nullable: true, name: 'note' })

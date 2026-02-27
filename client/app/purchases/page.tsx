@@ -150,6 +150,7 @@ export default function PurchasesPage() {
             sortable: true,
             render: (value) => {
                 const statusColors = {
+                    draft: 'bg-gray-700 text-gray-300',
                     pending: 'bg-yellow-900 text-yellow-300',
                     processing: 'bg-blue-900 text-blue-300',
                     completed: 'bg-green-900 text-green-300',

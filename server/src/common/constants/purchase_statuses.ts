@@ -1,4 +1,5 @@
 export const PURCHASE_STATUS = {
+    DRAFT: 'draft',
     PENDING: 'pending',
     PROCESSING: 'processing',
     COMPLETED: 'completed',
