@@ -306,6 +306,47 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
         return product ? `${product.name} (${product.code})` : code;
     };
 
+    const buildAsciiPreview = (): string => {
+        const truncate = (value: string, max: number) => {
+            if (value.length <= max) return value;
+            return `${value.slice(0, Math.max(0, max - 3))}...`;
+        };
+
+        const left = (value: string, width: number) => value.padEnd(width, ' ');
+        const right = (value: string, width: number) => value.padStart(width, ' ');
+
+        const border = '+----+------------------------------+----------+------+----------+------+------------+';
+        const header = '| #  | Product                      | Unit     | Qty  | Fee      | Tax% | Line Total |';
+
+        const rows = mergedPreviewItems.map((item, index) => {
+            const lineTotal = calculateItemTotal(item);
+            return `| ${right(String(index + 1), 2)} | ${left(truncate(getProductName(item.productCode), 28), 28)} | ${right(item.unitCost.toFixed(2), 8)} | ${right(String(item.quantity), 4)} | ${right(item.additionalFee.toFixed(2), 8)} | ${right(item.tax.toFixed(1), 4)} | ${right(lineTotal.toFixed(2), 10)} |`;
+        });
+
+        const summaryWidth = 84;
+        const divider = '-'.repeat(summaryWidth);
+        const summaryLine = (label: string, value: number) => {
+            const content = `${label}: $${value.toFixed(2)}`;
+            return `${left(content, summaryWidth)}`;
+        };
+
+        return [
+            'PURCHASE ORDER PREVIEW',
+            divider,
+            border,
+            header,
+            border,
+            ...rows,
+            border,
+            '',
+            summaryLine('Original Amount', mergedPreviewTotals.originalAmount),
+            summaryLine('Additional Fees', mergedPreviewTotals.totalFees),
+            summaryLine('Tax', mergedPreviewTotals.totalTax),
+            divider,
+            summaryLine('Final Amount', mergedPreviewTotals.finalAmount),
+        ].join('\n');
+    };
+
     return (
         <>
             <OverlayBackdrop className="z-50 flex items-center justify-center p-4">
@@ -601,48 +642,10 @@ export default function PurchaseFormModal({ isOpen, onClose, onSuccess }: Purcha
                                 </div>
                             )}
 
-                            <div className="space-y-3">
-                                {mergedPreviewItems.map((item, index) => (
-                                    <div key={item.id} className="bg-gray-700 border border-gray-600 rounded-lg p-3">
-                                        <div className="flex items-center justify-between gap-4">
-                                            <div>
-                                                <div className="text-sm font-semibold text-white">Line {index + 1}: {getProductName(item.productCode)}</div>
-                                                <div className="text-xs text-gray-300 mt-1">
-                                                    Unit Cost ${item.unitCost.toFixed(2)} • Qty {item.quantity} • Fee ${item.additionalFee.toFixed(2)} • Tax {item.tax}%
-                                                </div>
-                                                {item.notes && (
-                                                    <div className="text-xs text-gray-400 mt-1">Notes: {item.notes}</div>
-                                                )}
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-xs text-gray-400">Line Total</div>
-                                                <div className="text-base font-semibold text-white">${calculateItemTotal(item).toFixed(2)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                                <h4 className="text-base font-semibold text-white mb-3">Final Summary</h4>
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between text-gray-300">
-                                        <span>Original Amount:</span>
-                                        <span className="font-mono">${mergedPreviewTotals.originalAmount.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-300">
-                                        <span>Additional Fees:</span>
-                                        <span className="font-mono">${mergedPreviewTotals.totalFees.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-300">
-                                        <span>Tax:</span>
-                                        <span className="font-mono">${mergedPreviewTotals.totalTax.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-lg font-bold text-white pt-2 border-t border-gray-600">
-                                        <span>Final Amount:</span>
-                                        <span className="font-mono">${mergedPreviewTotals.finalAmount.toFixed(2)}</span>
-                                    </div>
-                                </div>
+                            <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 overflow-x-auto">
+                                <pre className="text-xs sm:text-sm text-gray-200 font-mono whitespace-pre m-0 leading-6">
+                                    {buildAsciiPreview()}
+                                </pre>
                             </div>
                         </div>
 
