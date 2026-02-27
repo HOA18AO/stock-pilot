@@ -385,7 +385,7 @@ export default function PurchaseDetailPage() {
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                 </svg>
-                                                <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
+                                                <div className="flex-1 grid grid-cols-1 md:grid-cols-6 gap-4">
                                                     <div>
                                                         <p className="text-xs text-gray-400">Product</p>
                                                         <p className="text-white font-semibold">
@@ -400,6 +400,10 @@ export default function PurchaseDetailPage() {
                                                     <div>
                                                         <p className="text-xs text-gray-400">Quantity</p>
                                                         <p className="text-white">{detail.quantity}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-gray-400">Additional Fee</p>
+                                                        <p className="text-white font-mono">${detail.additionalFee.toFixed(2)}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-xs text-gray-400">Tax</p>
