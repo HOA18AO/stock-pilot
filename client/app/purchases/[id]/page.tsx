@@ -66,6 +66,7 @@ export default function PurchaseDetailPage() {
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
     const [showReceiveModal, setShowReceiveModal] = useState(false);
     const [receiveLoading, setReceiveLoading] = useState(false);
+    const [statusToggleLoading, setStatusToggleLoading] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -162,6 +163,53 @@ export default function PurchaseDetailPage() {
         }
     };
 
+    const handleToggleDraftStatus = async () => {
+        if (!purchase) return;
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
+        if (purchase.status !== 'pending' && purchase.status !== 'draft') {
+            return;
+        }
+
+        const nextStatus = purchase.status === 'pending' ? 'draft' : 'pending';
+
+        setStatusToggleLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${getApiUrl()}/purchase/${purchase.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: nextStatus }),
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                router.push('/login');
+                return;
+            }
+
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData?.message || 'Failed to update purchase status');
+            }
+
+            await fetchPurchaseDetail(token);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to update purchase status');
+        } finally {
+            setStatusToggleLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-900 p-8 flex items-center justify-center">
@@ -186,6 +234,7 @@ export default function PurchaseDetailPage() {
     }
 
     const statusColors = {
+        draft: 'bg-gray-700 text-gray-300',
         pending: 'bg-yellow-900 text-yellow-300',
         processing: 'bg-blue-900 text-blue-300',
         completed: 'bg-green-900 text-green-300',
@@ -206,20 +255,37 @@ export default function PurchaseDetailPage() {
                             </svg>
                             Back to Purchases
                         </button>
-                        <h1 className="text-4xl font-bold text-white">Purchase Order Details</h1>
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-4xl font-bold text-white">Purchase Order Details</h1>
+                            {(purchase.status === 'pending' || purchase.status === 'draft') && (
+                                <Button
+                                    variant="secondary"
+                                    onClick={handleToggleDraftStatus}
+                                    disabled={statusToggleLoading}
+                                    className={purchase.status === 'draft'
+                                        ? 'bg-green-700 hover:bg-green-600 focus:ring-green-500 text-white'
+                                        : 'bg-gray-700 hover:bg-gray-600 text-white'}
+                                >
+                                    {statusToggleLoading
+                                        ? 'Updating...'
+                                        : 'Draft'}
+                                </Button>
+                            )}
+                        </div>
                         <p className="text-gray-400 mt-1">{purchase.code}</p>
                     </div>
                     <div className="flex gap-3">
-                        <Button variant="secondary">Edit Purchase</Button>
-                        {isAllProductsReceived() ? (
-                            <button
-                                disabled
-                                className="px-4 py-2 bg-gray-600 text-gray-400 rounded cursor-not-allowed flex items-center gap-2"
-                            >
-                                ✓ Received
-                            </button>
-                        ) : (
-                            <Button onClick={() => setShowReceiveModal(true)}>Receive Products</Button>
+                        {purchase.status !== 'draft' && (
+                            isAllProductsReceived() ? (
+                                <button
+                                    disabled
+                                    className="px-4 py-2 bg-gray-600 text-gray-400 rounded cursor-not-allowed flex items-center gap-2"
+                                >
+                                    ✓ Received
+                                </button>
+                            ) : (
+                                <Button onClick={() => setShowReceiveModal(true)}>Receive Products</Button>
+                            )
                         )}
                         <Button variant="outline">Print</Button>
                     </div>
