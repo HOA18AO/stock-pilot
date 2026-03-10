@@ -2,6 +2,9 @@ import { DataSource } from 'typeorm';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 
+// Load root .env first so DB_* values are available regardless current working directory.
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env') });
+// Keep default lookup as a fallback for setups that place .env beside package.json.
 dotenv.config();
 
 export const AppDataSource = new DataSource({
