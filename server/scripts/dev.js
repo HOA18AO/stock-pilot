@@ -22,11 +22,18 @@ if (fs.existsSync(rootEnvPath)) {
 }
 env.PORT = String(port);
 
-const child = spawn("npm", ["run", "start:dev"], {
+const serverRoot = path.join(__dirname, "..");
+const nestCli = require.resolve("@nestjs/cli/bin/nest.js");
+
+const child = spawn(process.execPath, [nestCli, "start", "--watch"], {
   stdio: "inherit",
-  shell: true,
-  cwd: path.join(__dirname, ".."),
+  cwd: serverRoot,
   env,
+});
+
+child.on("error", (error) => {
+  console.error("Failed to start NestJS:", error.message);
+  process.exit(1);
 });
 
 child.on("exit", (code) => process.exit(code ?? 0));

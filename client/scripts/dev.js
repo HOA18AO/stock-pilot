@@ -20,11 +20,25 @@ const port = (() => {
   return 3000;
 })();
 
-const child = spawn("npx", ["next", "dev", "-p", String(port)], {
+const clientRoot = path.join(__dirname, "..");
+const nextCli = require.resolve("next/dist/bin/next");
+const childEnv = {
+  ...process.env,
+  PORT: String(port),
+  INIT_CWD: clientRoot,
+  npm_config_local_prefix: clientRoot,
+  npm_package_json: path.join(clientRoot, "package.json"),
+};
+
+const child = spawn(process.execPath, [nextCli, "dev", "-p", String(port)], {
   stdio: "inherit",
-  shell: true,
-  cwd: path.join(__dirname, ".."),
-  env: { ...process.env, PORT: String(port) },
+  cwd: clientRoot,
+  env: childEnv,
+});
+
+child.on("error", (error) => {
+  console.error("Failed to start Next.js:", error.message);
+  process.exit(1);
 });
 
 child.on("exit", (code) => process.exit(code ?? 0));
